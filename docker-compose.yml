@@ -1,0 +1,48 @@
+version: '3'
+
+volumes:
+  mongodb_api:
+
+services:
+  api_db:
+    container_name: mydocker-api-db
+    image: mongo:latest
+    volumes:
+      - mongodb_api:/data/db
+    command:
+      - --logpath
+      - /var/log/mongodb/mongod.log
+
+  api:
+    container_name: mydocker-api
+    build: ./api
+    command: yarn start
+    restart: unless-stopped
+    depends_on:
+      - api_db
+    environment:
+      PORT: 3001
+      NODE_ENV: production
+      MONGO_URL: mongodb://api_db:27017/api
+
+  frontend:
+    container_name: mydocker-frontend
+    build: ./frontend
+    command: yarn start
+    restart: unless-stopped
+    environment:
+      PORT: 3002
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      API_ORIGIN: http://api:3001
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: mydocker-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - api
+      - frontend
