@@ -2,10 +2,12 @@
 
 **WIP.** Experimental sandbox of a fullstack web project with a microservice / microfrontend architecture.
 
+Supported OS': Linux, MacOS 
+
 ## Setup
 
 ```
-$ make init             -- update "/etc/hosts" on MacOS/Linux -- do manually on Windows! -- run once
+$ make init             -- update "/etc/hosts", run once
 $ make install          -- install all dependencies
 $ make dev / make start -- run the whole system in dev/prod modes
 ```
