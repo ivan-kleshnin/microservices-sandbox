@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 
 volumes:
   mongodb_api:
@@ -18,6 +18,9 @@ services:
       - ./api/src:/usr/src/app/src
 
   frontend:
+    build:
+      context: ./frontend
+      target: base
     command: yarn dev
     environment:
       NODE_ENV: development
