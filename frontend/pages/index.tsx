@@ -2,13 +2,19 @@ import type {NextPage} from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import * as React from "react"
-import {API_ORIGIN} from "../env"
+import {API_ORIGIN, HOST} from "../env"
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = (props : any) : JSX.Element => {
-  // React.useEffect(() => {
-  //   fetch("/")
-  // }, [])
+  console.log("@ Home")
+  const [me, setMe] = React.useState(undefined)
+
+  React.useEffect(() => {
+    fetch("/api/me").then(resp => resp.json()).then(me => {
+      console.log("setMe:", me)
+      setMe(me)
+    }).catch(console.error)
+  }, [])
 
   return <>
     <div className={styles.container}>
@@ -19,53 +25,19 @@ const Home: NextPage = (props : any) : JSX.Element => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-
         <h4>ENV</h4>
         <pre><code>{`
           NODE_ENV = ${process.env.NODE_ENV}
         `}</code></pre>
 
-        <h4>SSR props</h4>
+        <h4>SSR</h4>
         <pre><code>
-          {JSON.stringify(props)}
+          props: {JSON.stringify(props, null, 2)}
+        </code></pre>
+
+        <h4>API</h4>
+        <pre><code>
+          me: {JSON.stringify(me, null, 2)}
         </code></pre>
       </main>
     </div>
@@ -75,11 +47,11 @@ const Home: NextPage = (props : any) : JSX.Element => {
 export default Home
 
 export async function getServerSideProps(context : any) {
-  const pong = await fetch(API_ORIGIN + "/api/ping").then(resp => resp.text())
+  const ping = await fetch(API_ORIGIN + "/ping").then(resp => resp.text())
 
   return {
     props: {
-      pong,
+      ping,
     },
   }
 }

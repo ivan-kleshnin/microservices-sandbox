@@ -5,18 +5,18 @@ const {PORT, MONGO_URL} = require("./env")
 
 const app = express()
 
-app.get("/api/ping", (req, resp) => {
+app.get("/ping", (req, resp) => {
   resp.send("pong!")
 })
 
-app.get("/api/me", (req, resp) => {
+app.get("/me", (req, resp) => {
   resp.send({
     id: new ObjectId().toString(),
     role: "admin",
   })
 })
 
-app.post("/api/register", (req, resp) => {
+app.post("/register", (req, resp) => {
   const db = client.db("api")
   db.collection("accounts")
     .insertMany([

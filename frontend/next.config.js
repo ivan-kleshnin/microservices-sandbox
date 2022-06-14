@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
-// const {NODE_ENV} = process.env
+const {
+  HOST
+} = process.env
 
 module.exports = {
   reactStrictMode: true,
   env: {
-    // NODE_ENV,
+    HOST,
   },
 }

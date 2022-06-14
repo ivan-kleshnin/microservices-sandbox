@@ -19,6 +19,11 @@ $ make dev / make start
 - NodeJS
 - React
 
+## Local Features
+
+- Gateway proxy with Nginx
+- Working live reload
+
 ## ToDo
 
 - Test Prod deploy (DGO, AWS EC2).
