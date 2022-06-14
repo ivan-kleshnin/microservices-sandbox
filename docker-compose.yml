@@ -21,6 +21,7 @@ services:
     depends_on:
       - api_db
     environment:
+      HOST: http://mydocker.local
       PORT: 3001
       NODE_ENV: production
       MONGO_URL: mongodb://api_db:27017/api

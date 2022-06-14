@@ -5,8 +5,9 @@
 ## Setup
 
 ```
-$ make install
-$ make dev / make start
+$ make init             -- update "/etc/hosts" on MacOS/Linux -- do manually on Windows! -- run once
+$ make install          -- install all dependencies
+$ make dev / make start -- run the whole system in dev/prod modes
 ```
 
 ## Main Tools
