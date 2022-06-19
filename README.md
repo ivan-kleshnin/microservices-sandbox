@@ -26,9 +26,10 @@ $ make dev / make start -- run the whole system in dev/prod modes
 
 - Gateway proxy with Nginx
 - Working live reload
+- Multi-Stage Dockerfile builds.
 
 ## ToDo
 
 - Test Prod deploy (DGO, AWS EC2).
-- Multi-Stage Dockerfile builds.
+- Gitlab CI/CD (move repo).
 - "Scalable" version with K8s, etc.
