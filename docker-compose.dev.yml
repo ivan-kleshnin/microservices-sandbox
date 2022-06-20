@@ -1,36 +1,80 @@
-version: '3.4'
+version: "3.4"
+
+x-common-app:
+  environment: &next-env
+    HOST: http://mydocker.local
+    MAIN_ORIGIN: http://next-main:3000
+    AUTH_ORIGIN: http://next-auth:3001/auth
+    DB_ORIGIN: http://mongo-db:3002
+    NEXT_TELEMETRY_DISABLED: 1
+    NODE_ENV: development
+    MONGO_URL: mongodb://mongo-db:27017/default
 
 volumes:
-  mongodb_api:
+  mongo-db:
 
 services:
-  api_db:
-    ports:
-      - 3000:27017
-
-  api:
-    command: yarn dev
-    ports:
-      - 3001:3001
-    environment:
-      NODE_ENV: development
-    volumes:
-      - ./api/src:/usr/src/app/src
-
-  frontend:
-    build:
-      context: ./frontend
-      target: base
-    command: yarn dev
-    environment:
-      NODE_ENV: development
-    ports:
-      - 3002:3002
-    volumes:
-      - ./frontend/lib:/usr/src/app/lib
-      - ./frontend/pages:/usr/src/app/pages
-      - ./frontend/public:/usr/src/app/public
-
   nginx:
+    container_name: mydocker-nginx
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
     volumes:
       - ./nginx/nginx.dev.conf:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - next-main
+      - next-auth
+
+  next-main:
+    container_name: mydocker-next-main
+    build:
+      context: ./next-main
+      target: base
+    command: yarn dev
+    restart: unless-stopped
+    depends_on:
+      - mongo-db
+    environment:
+      <<: *next-env
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./next-main/lib:/usr/src/app/lib
+      - ./next-main/pages:/usr/src/app/pages
+      - ./next-main/public:/usr/src/app/public
+
+  next-auth:
+    container_name: mydocker-next-auth
+    build:
+      context: ./next-auth
+      target: base
+    command: yarn dev
+    restart: unless-stopped
+    depends_on:
+      - mongo-db
+    environment:
+      <<: *next-env
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./next-auth/lib:/usr/src/app/lib
+      - ./next-auth/pages:/usr/src/app/pages
+      - ./next-auth/public:/usr/src/app/public
+
+  mongo-db:
+    container_name: mydocker-mongo-db
+    build: ./mongo-db
+#    command:
+#      - --logpath
+#      - /var/log/mongodb/mongod.log
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: default
+    volumes:
+      - mongo-db:/data/db
