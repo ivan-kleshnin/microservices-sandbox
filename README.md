@@ -4,6 +4,10 @@
 
 Supported OS': Linux, MacOS 
 
+## Preview
+
+![Yarn](./preview.png)
+
 ## Setup
 
 ```
