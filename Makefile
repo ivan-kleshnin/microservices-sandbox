@@ -6,13 +6,13 @@ help: # Show this help
 init:
 	@echo '# Added by MyDocker\n127.0.0.1 mydocker.local' | sudo tee -a /etc/hosts
 
-install-api:
-	@cd api ; yarn install
+install-main:
+	@cd next-main ; yarn install
 
-install-frontend:
-	@cd frontend ; yarn install
+install-auth:
+	@cd next-auth ; yarn install
 
-install: install-api install-frontend
+install: install-main install-auth
 
 start: # Run the project in the prod mode
 	@docker compose up --build
@@ -20,7 +20,7 @@ start: # Run the project in the prod mode
 dev: # Run the project in the dev mode
 	@docker compose -f docker-compose.dev.yml up --build --detach
 
-down:
+stop:
 	@docker-compose down --remove-orphans
 
 # SHELL TO
@@ -37,8 +37,12 @@ seed-db:
 	@docker exec -it mydocker-mongo-db \
     mongoimport --db default --collection users --type json --file seed/users.json --jsonArray --drop
 
-# TODO logs for each instance?
-# TODO possible to live-reload through Nginx?
+# LOGS
+log-main:
+	@docker logs mydocker-next-main -f
+
+log-auth:
+	@docker logs mydocker-next-auth -f
 
 # LOCAL MACHINE ------------------------------------------------------------------------------------
 cleanup:
