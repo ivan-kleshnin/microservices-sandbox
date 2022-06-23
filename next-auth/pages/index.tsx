@@ -4,7 +4,8 @@ import Link from "next/link"
 import {signIn, signOut, useSession} from "next-auth/react"
 
 export default function Auth() : JSX.Element {
-  const {data: session} = useSession()
+  console.log("@ Auth")
+  const session = useSession()
 
   return <>
     <a href="/">Main App</a> <a href="/auth">Auth App</a>
@@ -12,14 +13,11 @@ export default function Auth() : JSX.Element {
     <h2>Auth Home Page</h2>
     <main>
       {
-        session ? (
+        session.data ? (
           <>
             <p>
-              Signed in as {session.user?.email}
+              Signed in as {session.data.user?.email}
             </p>
-            <pre><code>
-              {JSON.stringify(session, null, 2)}
-            </code></pre>
             <button onClick={() => signOut()}>Sign Out</button>
           </>
         ) : (
@@ -31,6 +29,15 @@ export default function Auth() : JSX.Element {
           </>
         )
       }
+
+      <h4>SESSION (next-auth)</h4>
+      <pre><code>
+        session.data: {
+          session.status == "loading"
+            ? "..."
+            : JSON.stringify(session.data, null, 2)
+        }
+      </code></pre>
     </main>
   </>
 }

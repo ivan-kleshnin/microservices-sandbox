@@ -4,7 +4,7 @@ const {
 } = process.env
 
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   // env: {
   //   HOST,
   // },
