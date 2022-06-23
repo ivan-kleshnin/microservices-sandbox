@@ -2,15 +2,21 @@ import Link from "next/link"
 import * as React from "react"
 import {NODE_ENV, MAIN_ORIGIN, AUTH_ORIGIN} from "env"
 import {signIn, signOut, useSession} from "next-auth/react"
+import {useQuerySession} from "hooks"
 
-export default function Home(props : any) : JSX.Element {
-  const session = useSession()
-  const [me, setMe] = React.useState(undefined)
+export default function Home(serverApiProps : any) : JSX.Element {
+  console.log("@ Home")
+  const querySession = useQuerySession()
+  // const querySession = useSession()
+  const [clientApiProps, setClientApiProps] = React.useState({})
 
   React.useEffect(() => {
-    fetch("/auth/api/me").then(resp => resp.json()).then(me => {
-      setMe(me)
-    }).catch(console.error)
+    Promise.all([
+      fetch("/api/ping").then(resp => resp.text()),
+      fetch("/auth/api/ping").then(resp => resp.text()),
+    ])
+      .then(([mainPing, authPing]) => setClientApiProps({mainPing, authPing}))
+      .catch(console.error)
   }, [])
 
   return <>
@@ -20,25 +26,25 @@ export default function Home(props : any) : JSX.Element {
     <main>
       <h4>ENV</h4>
       <pre><code>
-        env: {JSON.stringify({NODE_ENV}, null, 2)}
+        {JSON.stringify({NODE_ENV}, null, 2)}
       </code></pre>
 
       <h4>SERVER API (SSR)</h4>
       <pre><code>
-        props: {JSON.stringify(props, null, 2)}
+        {JSON.stringify(serverApiProps, null, 2)}
       </code></pre>
 
       <h4>BROWSER API</h4>
       <pre><code>
-        me: {JSON.stringify(me, null, 2)}
+        {JSON.stringify(clientApiProps, null, 2)}
       </code></pre>
 
-      <h4>SESSION</h4>
+     <h4>SESSION (react-query)</h4>
       <pre><code>
         session.data: {
-          session.status == "loading"
+          querySession.isLoading
             ? "..."
-            : JSON.stringify(session, null, 2)
+            : JSON.stringify(querySession.data, null, 2)
         }
       </code></pre>
     </main>

@@ -41,21 +41,20 @@ GET mydocker.local/auth/api/ping
 - Nginx
 - NodeJS
 - React
+- React-Query
 - Yarn
 
 
-## Local Features
+## Features
 
-- Gateway proxy with Nginx
-- Working live reload
-- Multi-Stage Dockerfile builds.
-- Authentication example with Next-Auth (`CredentialsProvider`)
-
-## ToDo
-
-- Test Prod deploy (DGO, AWS EC2).
-- Gitlab CI/CD (move repo).
-- "Scalable" version with K8s, etc.
+- [x] Gateway proxy with Nginx
+- [x] Working live reload
+- [x] Multi-Stage Dockerfile builds
+- [x] Authentication example with Next-Auth (`CredentialsProvider`)
+- [x] Next-Auth session fetched by React-Query
+- [ ] Prod deploy (DGO, AWS EC2)
+- [ ] Gitlab CI/CD (move repo)
+- [ ] "Scalable" version with K8s, etc.
 
 ---
 
